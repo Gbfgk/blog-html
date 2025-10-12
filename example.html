@@ -509,10 +509,10 @@
         <!-- 左侧导航栏 -->
         <div class="sidebar">
             <div class="logo">
-                <img src="https://via.placeholder.com/40" alt="Logo">
+                <img id="site-logo" src="https://via.placeholder.com/40" alt="Logo">
                 <div>
-                    <h1>纸鹿摸鱼处</h1>
-                    <p>纸鹿至蠢不知路，支炉制露不止漉</p>
+                    <h1 id="site-title">加载中...</h1>
+                    <p id="site-desc">加载中...</p>
                 </div>
             </div>
             
@@ -521,11 +521,8 @@
                 <span>Ctrl+K</span>
             </div>
             
-            <div class="nav-item active">
-                <i class="fas fa-file-alt"></i> 文章
-            </div>
-            <div class="nav-item">
-                <i class="fas fa-link"></i> 友链
+            <div id="sidebar-nav">
+                <!-- 导航项由JS动态生成 -->
             </div>
             <div class="nav-item">
                 <i class="fas fa-archive"></i> 归档
@@ -538,12 +535,8 @@
             </div>
             
             <!-- 底部图标链接区域 - 只显示图标横向排列 -->
-            <div class="bottom-icons">
-                <a href="#" title="首页"><i class="fas fa-home"></i></a>
-                <a href="#" title="评论"><i class="fas fa-comments"></i></a>
-                <a href="#" title="友链"><i class="fas fa-link"></i></a>
-                <a href="#" title="RSS"><i class="fas fa-rss"></i></a>
-                <a href="#" title="关于"><i class="fas fa-info-circle"></i></a>
+            <div class="bottom-icons" id="bottom-icons">
+                <!-- 图标链接将由JS动态生成 -->
             </div>
         </div>
         
@@ -681,42 +674,32 @@
             const darkModeBtn = document.getElementById('dark-mode');
             const lightModeBtn = document.getElementById('light-mode');
             const systemModeBtn = document.getElementById('system-mode');
-            
-            // 设置初始状态
             let currentTheme = 'light';
-            
-            // 检查本地存储中的主题设置
             if (localStorage.getItem('theme')) {
                 currentTheme = localStorage.getItem('theme');
                 applyTheme(currentTheme);
             } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                // 如果用户系统是深色模式且没有本地设置，则使用深色模式
                 currentTheme = 'dark';
                 applyTheme(currentTheme);
             }
-            
-            // 点击事件处理
             darkModeBtn.addEventListener('click', function() {
                 currentTheme = 'dark';
                 applyTheme(currentTheme);
                 updateActiveButton();
                 localStorage.setItem('theme', currentTheme);
             });
-            
             lightModeBtn.addEventListener('click', function() {
                 currentTheme = 'light';
                 applyTheme(currentTheme);
                 updateActiveButton();
                 localStorage.setItem('theme', currentTheme);
             });
-            
             systemModeBtn.addEventListener('click', function() {
                 currentTheme = 'system';
                 applyTheme(currentTheme);
                 updateActiveButton();
                 localStorage.setItem('theme', currentTheme);
             });
-            
             function applyTheme(theme) {
                 if (theme === 'dark') {
                     document.body.classList.add('dark-mode');
@@ -730,12 +713,10 @@
                     }
                 }
             }
-            
             function updateActiveButton() {
                 darkModeBtn.classList.remove('active');
                 lightModeBtn.classList.remove('active');
                 systemModeBtn.classList.remove('active');
-                
                 if (currentTheme === 'dark') {
                     darkModeBtn.classList.add('active');
                 } else if (currentTheme === 'light') {
@@ -744,8 +725,6 @@
                     systemModeBtn.classList.add('active');
                 }
             }
-            
-            // 监听系统主题变化
             if (window.matchMedia) {
                 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
                     if (currentTheme === 'system') {
@@ -757,6 +736,55 @@
                     }
                 });
             }
+
+            // 读取 title.json 并设置标题、介绍和logo
+            fetch('./title.json')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('site-title').textContent = data.title || '我的博客';
+                    document.getElementById('site-desc').textContent = data.description || '';
+                    if (data.logoUrl) {
+                        document.getElementById('site-logo').src = data.logoUrl;
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('site-title').textContent = '我的博客';
+                    document.getElementById('site-desc').textContent = '';
+                });
+
+            // 读取 link.csv 并生成底部图标链接和侧边栏导航
+            fetch('./link.csv')
+                .then(res => res.text())
+                .then(text => {
+                    const lines = text.trim().split('\n');
+                    const icons = lines.slice(1).map(line => {
+                        const [icon, title, url] = line.split(',');
+                        return { icon, title, url };
+                    });
+                    // 底部图标
+                    const container = document.getElementById('bottom-icons');
+                    container.innerHTML = '';
+                    icons.forEach(item => {
+                        const a = document.createElement('a');
+                        a.href = item.url;
+                        a.title = item.title;
+                        a.target = '_blank';
+                        a.innerHTML = `<i class=\"fas fa-${item.icon}\"></i>`;
+                        container.appendChild(a);
+                    });
+                    // 侧边栏导航
+                    const nav = document.getElementById('sidebar-nav');
+                    nav.innerHTML = '';
+                    icons.forEach((item, idx) => {
+                        const div = document.createElement('div');
+                        div.className = 'nav-item' + (idx === 0 ? ' active' : '');
+                        div.innerHTML = `<i class=\"fas fa-${item.icon}\"></i> ${item.title}`;
+                        div.onclick = () => {
+                            window.open(item.url, '_blank');
+                        };
+                        nav.appendChild(div);
+                    });
+                });
         });
     </script>
 </body>
