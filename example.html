@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纸鹿摸鱼处</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            transition: background-color 0.3s ease;
+        }
+        
+        /* 深色模式样式 */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            display: flex;
+            gap: 20px;
+        }
+        
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: background-color 0.3s ease;
+        }
+        
+        body.dark-mode .sidebar {
+            background-color: #1e1e1e;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+        
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .logo p {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        body.dark-mode .logo p {
+            color: #aaa;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        body.dark-mode .search-box {
+            border-color: #444;
+            background-color: #2d2d2d;
+        }
+        
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            background: transparent;
+            color: inherit;
+        }
+        
+        body.dark-mode .search-box input {
+            color: #fff;
+        }
+        
+        .search-box span {
+            font-size: 12px;
+            color: #999;
+            margin-left: 10px;
+        }
+        
+        body.dark-mode .search-box span {
+            color: #aaa;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        body.dark-mode .nav-item:hover {
+            background-color: #333;
+        }
+        
+        .nav-item.active {
+            background-color: #e0e0e0;
+            font-weight: 600;
+        }
+        
+        body.dark-mode .nav-item.active {
+            background-color: #444;
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        body.dark-mode .nav-item i {
+            color: #fff;
+        }
+        
+        .theme-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            padding: 10px;
+            border-radius: 20px;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+        
+        body.dark-mode .theme-toggle {
+            background-color: #333;
+        }
+        
+        .theme-toggle button {
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            transition: color 0.2s;
+        }
+        
+        body.dark-mode .theme-toggle button {
+            color: #aaa;
+        }
+        
+        .theme-toggle button.active {
+            color: #333;
+            font-weight: bold;
+        }
+        
+        body.dark-mode .theme-toggle button.active {
+            color: #fff;
+        }
+        
+        /* 底部图标链接区域 - 横向排列，只显示图标 */
+        .bottom-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            gap: 20px;
+            transition: border-color 0.3s ease;
+        }
+        
+        body.dark-mode .bottom-icons {
+            border-top-color: #444;
+        }
+        
+        .bottom-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            color: #666;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+        
+        body.dark-mode .bottom-icons a {
+            background-color: #333;
+            color: #aaa;
+        }
+        
+        .bottom-icons a:hover {
+            background-color: #e0e0e0;
+            color: #333;
+            transform: translateY(-2px);
+        }
+        
+        body.dark-mode .bottom-icons a:hover {
+            background-color: #444;
+            color: #fff;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h2 {
+            font-size: 28px;
+            color: #999;
+            font-weight: 300;
+        }
+        
+        body.dark-mode .header h2 {
+            color: #aaa;
+        }
+        
+        .featured-articles {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .featured-card {
+            min-width: 250px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://via.placeholder.com/250x120') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: flex-end;
+            padding: 15px;
+            color: white;
+        }
+        
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .article-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, background-color 0.3s ease;
+        }
+        
+        body.dark-mode .article-card {
+            background-color: #1e1e1e;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .article-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+            color: #333;
+        }
+        
+        body.dark-mode .article-title {
+            color: #fff;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        body.dark-mode .article-meta {
+            color: #aaa;
+        }
+        
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .article-excerpt {
+            margin: 15px 0;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        body.dark-mode .article-excerpt {
+            color: #ddd;
+        }
+        
+        .article-tags {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            background-color: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        body.dark-mode .tag {
+            background-color: #333;
+            color: #aaa;
+        }
+        
+        .tag.blue {
+            background-color: #e0f0ff;
+            color: #007bff;
+        }
+        
+        body.dark-mode .tag.blue {
+            background-color: #007bff;
+            color: #fff;
+        }
+        
+        .tag.orange {
+            background-color: #fff0e0;
+            color: #ff7700;
+        }
+        
+        body.dark-mode .tag.orange {
+            background-color: #ff7700;
+            color: #fff;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 5px;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        body.dark-mode .pagination button {
+            border-color: #444;
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+        
+        .pagination button.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        body.dark-mode .pagination button.active {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .pagination button:first-child,
+        .pagination button:last-child {
+            padding: 8px 10px;
+        }
+        
+        /* 文章卡片带图片的样式 */
+        .article-with-image {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .article-image {
+            width: 150px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .article-content {
+            flex: 1;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .featured-articles {
+                flex-wrap: wrap;
+            }
+            
+            .featured-card {
+                min-width: 100%;
+            }
+            
+            .article-with-image {
+                flex-direction: column;
+            }
+            
+            .article-image {
+                width: 100%;
+                height: 150px;
+            }
+            
+            .bottom-icons {
+                gap: 15px;
+            }
+            
+            .bottom-icons a {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .theme-toggle button {
+                font-size: 14px;
+                padding: 5px 8px;
+            }
+            
+            .bottom-icons {
+                gap: 10px;
+            }
+            
+            .bottom-icons a {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="https://via.placeholder.com/40" alt="Logo">
+                <div>
+                    <h1>纸鹿摸鱼处</h1>
+                    <p>纸鹿至蠢不知路，支炉制露不止漉</p>
+                </div>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" placeholder="搜索">
+                <span>Ctrl+K</span>
+            </div>
+            
+            <div class="nav-item active">
+                <i class="fas fa-file-alt"></i> 文章
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-link"></i> 友链
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-archive"></i> 归档
+            </div>
+            
+            <div class="theme-toggle">
+                <button id="dark-mode" title="深色模式"><i class="fas fa-moon"></i></button>
+                <button id="light-mode" class="active" title="浅色模式"><i class="fas fa-sun"></i></button>
+                <button id="system-mode" title="跟随系统"><i class="fas fa-adjust"></i></button>
+            </div>
+            
+            <!-- 底部图标链接区域 - 只显示图标横向排列 -->
+            <div class="bottom-icons">
+                <a href="#" title="首页"><i class="fas fa-home"></i></a>
+                <a href="#" title="评论"><i class="fas fa-comments"></i></a>
+                <a href="#" title="友链"><i class="fas fa-link"></i></a>
+                <a href="#" title="RSS"><i class="fas fa-rss"></i></a>
+                <a href="#" title="关于"><i class="fas fa-info-circle"></i></a>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="header">
+                <h2>精选文章</h2>
+            </div>
+            
+            <div class="featured-articles">
+                <div class="featured-card">
+                    <div>
+                        <h3>Win 终端</h3>
+                        <p>PowerShell 体验优化</p>
+                    </div>
+                </div>
+                <div class="featured-card" style="background-image: url('https://via.placeholder.com/250x120?text=Moonlight');">
+                    <div>
+                        <h3>Moonlight</h3>
+                        <p>游戏串流/远程控制</p>
+                    </div>
+                </div>
+                <div class="featured-card" style="background-image: url('https://via.placeholder.com/250x120?text=ArchInstall');">
+                    <div>
+                        <h3>ArchInstall</h3>
+                        <p>轻松安装 Arch Linux</p>
+                    </div>
+                </div>
+                <div class="featured-card" style="background-image: url('https://via.placeholder.com/250x120?text=More');">
+                    <div>
+                        <h3>更多...</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                <span style="margin-right: 15px;"><i class="fas fa-folder"></i> 全部分类</span>
+                <span><i class="fas fa-calendar-alt"></i> 创建日期</span>
+            </div>
+            
+            <div class="article-list">
+                <!-- 文章1 -->
+                <div class="article-card">
+                    <h3 class="article-title">谈谈不受欢迎的博客技术特征</h3>
+                    <div class="article-excerpt">
+                        从弹窗干扰到服务滥用，文章剖析博客网站「自以为在优化，实则在添堵」的负面技术特征。
+                    </div>
+                    <div class="article-meta">
+                        <span><i class="fas fa-clock"></i> 5 天前</span>
+                        <span><i class="fas fa-tag"></i> 杂谈</span>
+                        <span><i class="fas fa-font"></i> 2253 字</span>
+                    </div>
+                </div>
+                
+                <!-- 文章2 -->
+                <div class="article-card">
+                    <h3 class="article-title">我们的设备被拿来做了什么：软件的背景行为</h3>
+                    <div class="article-excerpt">
+                        软件为了利益添加不合用户预期的「背景行为」，无论早晚都会暴雷。你我都可能是「背景行为」的波及者，你享受了免费，你的设备在为你打工。
+                    </div>
+                    <div class="article-meta">
+                        <span><i class="fas fa-clock"></i> 8月18日</span>
+                        <span><i class="fas fa-tag"></i> 杂谈</span>
+                        <span><i class="fas fa-font"></i> 1557 字</span>
+                    </div>
+                </div>
+                
+                <!-- 文章3 -->
+                <div class="article-card">
+                    <div class="article-with-image">
+                        <div class="article-image">
+                            <img src="https://via.placeholder.com/150x100?text=字体与排版" alt="字体与排版">
+                        </div>
+                        <div class="article-content">
+                            <h3 class="article-title">前端字体二三事</h3>
+                            <div class="article-excerpt">
+                                前端字体排版有许多细节需要注意，文章从我的实际开发经验出发，介绍合成字形、对齐技巧、排版优化，以及自己的一些踩坑心得。
+                            </div>
+                            <div class="article-meta">
+                                <span><i class="fas fa-clock"></i> 4月16日</span>
+                                <span><i class="fas fa-clock"></i> 5 天前</span>
+                                <span><i class="fas fa-tag"></i> 经验分享</span>
+                                <span><i class="fas fa-font"></i> 4048 字</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文章4 -->
+                <div class="article-card">
+                    <div class="article-with-image">
+                        <div class="article-image">
+                            <img src="https://via.placeholder.com/150x100?text=深浅色模式" alt="深浅色模式">
+                        </div>
+                        <div class="article-content">
+                            <h3 class="article-title">深色模式开发的最佳实践</h3>
+                            <div class="article-excerpt">
+                                前端深色模式不止于 prefers-color-scheme，完整解析自动检测、手动切换的实现方案，解决闪屏、样式冲突、变量管理等常见痛点，提供稳健的深色模式最佳实践。
+                            </div>
+                            <div class="article-meta">
+                                <span><i class="fas fa-clock"></i> 4月14日</span>
+                                <span><i class="fas fa-tag"></i> 经验分享</span>
+                                <span><i class="fas fa-font"></i> 1353 字</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文章5 -->
+                <div class="article-card">
+                    <h3 class="article-title">寻不回手工油糕</h3>
+                    <div class="article-excerpt">
+                        油糕的酥皮，是从什么时候开始不往下掉的？
+                    </div>
+                    <div class="pagination">
+                        <button><i class="fas fa-chevron-left"></i></button>
+                        <button class="active">1</button>
+                        <button>2</button>
+                        <button>3</button>
+                        <button>4</button>
+                        <button>5</button>
+                        <button>6</button>
+                        <button>...</button>
+                        <button>9</button>
+                        <button><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 深浅色模式切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkModeBtn = document.getElementById('dark-mode');
+            const lightModeBtn = document.getElementById('light-mode');
+            const systemModeBtn = document.getElementById('system-mode');
+            
+            // 设置初始状态
+            let currentTheme = 'light';
+            
+            // 检查本地存储中的主题设置
+            if (localStorage.getItem('theme')) {
+                currentTheme = localStorage.getItem('theme');
+                applyTheme(currentTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // 如果用户系统是深色模式且没有本地设置，则使用深色模式
+                currentTheme = 'dark';
+                applyTheme(currentTheme);
+            }
+            
+            // 点击事件处理
+            darkModeBtn.addEventListener('click', function() {
+                currentTheme = 'dark';
+                applyTheme(currentTheme);
+                updateActiveButton();
+                localStorage.setItem('theme', currentTheme);
+            });
+            
+            lightModeBtn.addEventListener('click', function() {
+                currentTheme = 'light';
+                applyTheme(currentTheme);
+                updateActiveButton();
+                localStorage.setItem('theme', currentTheme);
+            });
+            
+            systemModeBtn.addEventListener('click', function() {
+                currentTheme = 'system';
+                applyTheme(currentTheme);
+                updateActiveButton();
+                localStorage.setItem('theme', currentTheme);
+            });
+            
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                } else if (theme === 'light') {
+                    document.body.classList.remove('dark-mode');
+                } else if (theme === 'system') {
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                }
+            }
+            
+            function updateActiveButton() {
+                darkModeBtn.classList.remove('active');
+                lightModeBtn.classList.remove('active');
+                systemModeBtn.classList.remove('active');
+                
+                if (currentTheme === 'dark') {
+                    darkModeBtn.classList.add('active');
+                } else if (currentTheme === 'light') {
+                    lightModeBtn.classList.add('active');
+                } else if (currentTheme === 'system') {
+                    systemModeBtn.classList.add('active');
+                }
+            }
+            
+            // 监听系统主题变化
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                    if (currentTheme === 'system') {
+                        if (e.matches) {
+                            document.body.classList.add('dark-mode');
+                        } else {
+                            document.body.classList.remove('dark-mode');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
