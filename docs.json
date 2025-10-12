@@ -1,0 +1,14 @@
+[
+  {
+    "title": "谈谈不受欢迎的博客技术特征",
+    "desc": "从弹窗干扰到服务滥用，文章剖析博客网站「自以为在优化，实则在添堵」的负面技术特征。",
+    "img": "https://via.placeholder.com/250x120?text=杂谈",
+    "link": "https://meteor.xn/docs/1"
+  },
+  {
+    "title": "我们的设备被拿来做了什么：软件的背景行为",
+    "desc": "软件为了利益添加不合用户预期的「背景行为」，无论早晚都会暴雷。你我都可能是「背景行为」的波及者，你享受了免费，你的设备在为你打工。",
+    "img": "https://via.placeholder.com/250x120?text=杂谈",
+    "link": "https://meteor.xn/docs/2"
+  }
+]

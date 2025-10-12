@@ -1,3 +1,51 @@
+    // 读取 goods.json 并渲染推荐文章
+    fetch('./goods.json')
+        .then(res => res.json())
+        .then(goods => {
+            const container = document.querySelector('.featured-articles');
+            if (!container) return;
+            container.innerHTML = '';
+            goods.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'featured-card';
+                card.style.backgroundImage = `url('${item.img}')`;
+                card.innerHTML = `<div><h3>${item.title}</h3>${item.desc ? `<p>${item.desc}</p>` : ''}</div>`;
+                if(item.link) {
+                    card.style.cursor = 'pointer';
+                    card.onclick = () => window.open(item.link, '_blank');
+                }
+                container.appendChild(card);
+            });
+        });
+
+    // 读取 docs.json 并渲染文章列表
+    fetch('./docs.json')
+        .then(res => res.json())
+        .then(docs => {
+            const container = document.querySelector('.article-list');
+            if (!container) return;
+            container.innerHTML = '';
+            docs.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'article-card';
+                card.innerHTML = `
+                    <div class="article-with-image">
+                        <div class="article-image">
+                            <img src="${item.img}" alt="${item.title}">
+                        </div>
+                        <div class="article-content">
+                            <h3 class="article-title">${item.title}</h3>
+                            <div class="article-excerpt">${item.desc || ''}</div>
+                        </div>
+                    </div>
+                `;
+                if(item.link) {
+                    card.style.cursor = 'pointer';
+                    card.onclick = () => window.open(item.link, '_blank');
+                }
+                container.appendChild(card);
+            });
+        });
 // 深浅色模式切换、title.json和link.csv动态加载
 
 document.addEventListener('DOMContentLoaded', function() {
