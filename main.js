@@ -49,6 +49,31 @@
 // 深浅色模式切换、title.json和link.csv动态加载
 
 document.addEventListener('DOMContentLoaded', function() {
+    // 响应式内容避让侧边栏
+    function adjustContentMargin() {
+        const container = document.querySelector('.container');
+        const sidebar = document.querySelector('.sidebar');
+        if (!container || !sidebar) return;
+        const winW = window.innerWidth;
+        const sidebarW = sidebar.offsetWidth;
+        container.style.position = 'absolute';
+        container.style.top = '0';
+        container.style.bottom = '0';
+        container.style.height = '100vh';
+        if (winW > 900) {
+            container.style.left = sidebarW + 'px';
+            container.style.right = '0';
+        } else if (winW > 600) {
+            container.style.left = '0';
+            container.style.right = sidebarW + 'px';
+        } else {
+            container.style.left = '0';
+            container.style.right = '0';
+        }
+    }
+    window.addEventListener('resize', adjustContentMargin);
+    setTimeout(adjustContentMargin, 0);
+    setTimeout(adjustContentMargin, 300);
     const darkModeBtn = document.getElementById('dark-mode');
     const lightModeBtn = document.getElementById('light-mode');
     const systemModeBtn = document.getElementById('system-mode');
