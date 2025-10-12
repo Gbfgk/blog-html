@@ -1,4 +1,8 @@
-    // 读取 goods.json 并渲染推荐文章
+// 小屏竖屏自动跳转到所有文章页
+if (window.innerWidth <= 700 && window.innerHeight > window.innerWidth) {
+    window.location.href = './all.html';
+}
+// 读取 goods.json 并渲染推荐文章
     fetch('./goods.json')
         .then(res => res.json())
         .then(goods => {
@@ -25,26 +29,32 @@
             const container = document.querySelector('.article-list');
             if (!container) return;
             container.innerHTML = '';
-            docs.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'article-card';
-                card.innerHTML = `
-                    <div class="article-with-image">
-                        <div class="article-image">
-                            <img src="${item.img}" alt="${item.title}">
+                const sidebar = document.querySelector('.sidebar');
+                const sidebarH = sidebar ? sidebar.offsetHeight : 0;
+                let totalH = 0;
+                for (let i = 0; i < docs.length; i++) {
+                    const item = docs[i];
+                    const card = document.createElement('div');
+                    card.className = 'article-card';
+                    card.innerHTML = `
+                        <div class="article-with-image">
+                            <div class="article-image">
+                                <img src="${item.img}" alt="${item.title}">
+                            </div>
+                            <div class="article-content">
+                                <h3 class="article-title">${item.title}</h3>
+                                <div class="article-excerpt">${item.desc || ''}</div>
+                            </div>
                         </div>
-                        <div class="article-content">
-                            <h3 class="article-title">${item.title}</h3>
-                            <div class="article-excerpt">${item.desc || ''}</div>
-                        </div>
-                    </div>
-                `;
-                if(item.link) {
-                    card.style.cursor = 'pointer';
-                    card.onclick = () => window.open(item.link, '_blank');
+                    `;
+                    if(item.link) {
+                        card.style.cursor = 'pointer';
+                        card.onclick = () => window.open(item.link, '_blank');
+                    }
+                    container.appendChild(card);
+                    totalH += card.offsetHeight || 120;
+                    if (sidebarH && totalH > sidebarH) break;
                 }
-                container.appendChild(card);
-            });
         });
 // 深浅色模式切换、title.json和link.csv动态加载
 

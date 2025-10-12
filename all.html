@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>所有文章</title>
+    <link rel="stylesheet" href="./style.css">
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <body>
+    <div id="global-bg"></div>
+    <div id="global-bg-mask"></div>
+        <div style="max-width:900px;margin:0 auto;position:relative;z-index:1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px;">
+                <button id="back-btn" style="padding:8px 18px;font-size:16px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;">返回主页</button>
+                <div class="theme-toggle" style="margin:0;">
+                    <button id="dark-mode" title="深色模式"><i class="fas fa-moon"></i></button>
+                    <button id="light-mode" class="active" title="浅色模式"><i class="fas fa-sun"></i></button>
+                    <button id="system-mode" title="跟随系统"><i class="fas fa-adjust"></i></button>
+                </div>
+            </div>
+            <div class="all-search-box">
+                <input type="text" id="all-search-input" placeholder="搜索文章标题/内容...">
+            </div>
+            <div class="all-article-list" id="all-article-list"></div>
+            <div class="all-pagination" id="all-pagination"></div>
+            <div class="bottom-icons" id="all-bottom-icons" style="margin:40px 0 0 0;"></div>
+        </div>
+        <script>
+        // 渲染底部 link.csv 和 under_link.csv 图标
+        function renderBottomIcons(links) {
+            const container = document.getElementById('all-bottom-icons');
+            container.innerHTML = '';
+            links.forEach(item => {
+                const a = document.createElement('a');
+                a.href = item.url || item.link;
+                a.target = '_blank';
+                a.innerHTML = `<i class="fas fa-${item.icon}"></i>`;
+                a.title = item.title || '';
+                container.appendChild(a);
+            });
+        }
+        Promise.all([
+            fetch('./link.csv').then(r=>r.text()),
+            fetch('./under_link.csv').then(r=>r.text())
+        ]).then(([linkText, underText]) => {
+            const linkLines = linkText.trim().split('\n').slice(1);
+            const underLines = underText.trim().split('\n').slice(1);
+            const linkIcons = linkLines.map(line => {
+                const [icon, title, url] = line.split(',');
+                return { icon, title, url };
+            });
+            const underIcons = underLines.map(line => {
+                const [icon, link] = line.split(',');
+                return { icon, link };
+            });
+            renderBottomIcons([...linkIcons, ...underIcons]);
+        });
+        // 背景图片和遮罩
+        fetch('./config.json').then(r=>r.json()).then(cfg=>{
+            if(cfg.backgroundUrl) {
+                document.getElementById('global-bg').style.backgroundImage = `url('${cfg.backgroundUrl}')`;
+            }
+        });
+        // 深浅色切换
+        const darkModeBtn = document.getElementById('dark-mode');
+        const lightModeBtn = document.getElementById('light-mode');
+        const systemModeBtn = document.getElementById('system-mode');
+        let currentTheme = 'light';
+        if (localStorage.getItem('theme')) {
+            currentTheme = localStorage.getItem('theme');
+            applyTheme(currentTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            currentTheme = 'dark';
+            applyTheme(currentTheme);
+        }
+        darkModeBtn.addEventListener('click', function() {
+            currentTheme = 'dark';
+            applyTheme(currentTheme);
+            updateActiveButton();
+            localStorage.setItem('theme', currentTheme);
+        });
+        lightModeBtn.addEventListener('click', function() {
+            currentTheme = 'light';
+            applyTheme(currentTheme);
+            updateActiveButton();
+            localStorage.setItem('theme', currentTheme);
+        });
+        systemModeBtn.addEventListener('click', function() {
+            currentTheme = 'system';
+            applyTheme(currentTheme);
+            updateActiveButton();
+            localStorage.setItem('theme', currentTheme);
+        });
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else if (theme === 'light') {
+                document.body.classList.remove('dark-mode');
+            } else if (theme === 'system') {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+            }
+        }
+        function updateActiveButton() {
+            darkModeBtn.classList.remove('active');
+            lightModeBtn.classList.remove('active');
+            systemModeBtn.classList.remove('active');
+            if (currentTheme === 'dark') {
+                darkModeBtn.classList.add('active');
+            } else if (currentTheme === 'light') {
+                lightModeBtn.classList.add('active');
+            } else if (currentTheme === 'system') {
+                systemModeBtn.classList.add('active');
+            }
+        }
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (currentTheme === 'system') {
+                    if (e.matches) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                }
+            });
+        }
+        // 返回主页
+        document.getElementById('back-btn').onclick = () => { window.location.href = './example.html'; };
+
+        // 文章渲染与分页
+        let allDocs = [];
+        let page = 1;
+        const pageSize = 5;
+        let searchKey = '';
+        function renderList() {
+            const list = document.getElementById('all-article-list');
+            let filtered = allDocs;
+            if (searchKey) {
+                filtered = allDocs.filter(d => d.title.includes(searchKey) || (d.desc && d.desc.includes(searchKey)));
+            }
+            const start = (page-1)*pageSize;
+            const end = start+pageSize;
+            const show = filtered.slice(start, end);
+            list.innerHTML = '';
+            show.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'article-card';
+                card.innerHTML = `
+                    <div class="article-with-image">
+                        <div class="article-image">
+                            <img src="${item.img}" alt="${item.title}">
+                        </div>
+                        <div class="article-content">
+                            <h3 class="article-title">${item.title}</h3>
+                            <div class="article-excerpt">${item.desc || ''}</div>
+                        </div>
+                    </div>
+                `;
+                if(item.link) {
+                    card.style.cursor = 'pointer';
+                    card.onclick = () => window.open(item.link, '_blank');
+                }
+                list.appendChild(card);
+            });
+            renderPagination(filtered.length);
+        }
+        function renderPagination(total) {
+            const p = document.getElementById('all-pagination');
+            const pageCount = Math.ceil(total/pageSize);
+            p.innerHTML = '';
+            for(let i=1;i<=pageCount;i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                if(i===page) btn.className = 'active';
+                btn.onclick = () => { page=i; renderList(); };
+                p.appendChild(btn);
+            }
+        }
+        document.getElementById('all-search-input').addEventListener('input', e => {
+            searchKey = e.target.value.trim();
+            page = 1;
+            renderList();
+        });
+        fetch('./docs.json').then(r=>r.json()).then(docs=>{
+            allDocs = docs;
+            renderList();
+        });
+        </script>
+    </body>
+</html>
