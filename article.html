@@ -6,29 +6,6 @@
     <title>文章</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        .back-button {
-            margin-right: 15px;
-        }
-        .back-button button {
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 8px 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .back-button button:hover {
-            background: #e0e0e0;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-    </style>
 </head>
 <body>
     <div id="global-bg"></div>
@@ -67,8 +44,8 @@
                 <h2 id="article-title">文章</h2>
             </div>
 
-            <div id="article-iframe-wrap" style="width:100%;height:calc(100vh - 180px);">
-                <iframe id="article-iframe" src="about:blank" style="width:100%;height:100%;border:0;border-radius:8px;overflow:auto;background:#fff"></iframe>
+            <div id="article-iframe-wrap" class="iframe-container">
+                <iframe id="article-iframe" src="about:blank" frameborder="0"></iframe>
             </div>
 
             <div id="article-markdown-wrap" style="display:none;">
@@ -107,7 +84,6 @@
         });
     }).catch(()=>{});
 
-    // 解析 query param
     function getQueryParam(name) {
         const params = new URLSearchParams(window.location.search);
         return params.get(name);
@@ -118,7 +94,6 @@
         document.getElementById('article-title').textContent = '未指定文章';
     }
 
-    // 搜索功能
     function searchInArticle(keyword) {
         const container = document.getElementById('article-content');
         if(!keyword) return;
@@ -140,7 +115,6 @@
         }
     }
 
-    // 根据屏幕尺寸选择渲染模式
     function loadArticle() {
         const isLarge = window.innerWidth > 900;
         const iframeWrap = document.getElementById('article-iframe-wrap');
@@ -150,9 +124,8 @@
         const containerEl = document.querySelector('.container');
 
         if(isLarge) {
-            // 大屏模式 - 直接加载HTML文件
             contentWrap.style.display = 'none';
-            iframeWrap.style.display = 'block';
+            iframeWrap.style.display = 'flex'; // 使用 flex
             backButton.style.display = 'none';
             
             if(sidebar) {
@@ -162,23 +135,18 @@
             }
             
             if(doc) {
-                // 直接加载HTML文件
                 const htmlUrl = `./docs/${doc}.html`;
                 const iframe = document.getElementById('article-iframe');
                 iframe.src = htmlUrl;
-                
-                // 检查加载是否成功
-                iframe.onload = function() {
+                iframe.onload = () => {
                     document.getElementById('article-title').textContent = doc;
                 };
-                
-                iframe.onerror = function() {
+                iframe.onerror = () => {
                     document.getElementById('article-title').textContent = '文档加载失败';
                     iframe.srcdoc = '<body>文档不存在或加载失败</body>';
                 };
             }
         } else {
-            // 小屏模式 - 加载HTML内容到div
             if(sidebar) sidebar.style.display = 'none';
             if(containerEl) containerEl.style.marginLeft = '0';
             iframeWrap.style.display = 'none';
@@ -203,18 +171,13 @@
         }
     }
 
-    // 初始加载
     loadArticle();
-    
-    // 窗口大小改变时重新加载
     window.addEventListener('resize', loadArticle);
 
-    // 小屏搜索事件
     document.getElementById('article-search').addEventListener('input', e=>{
         const k = e.target.value.trim();
         if(k) searchInArticle(k);
     });
-
     </script>
 </body>
 </html>
