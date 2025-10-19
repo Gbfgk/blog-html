@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>loading</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="global-bg"></div>
+    <div id="global-bg-mask"></div>
+    <div class="sidebar">
+            <div class="logo">
+                <img id="site-logo" src="https://via.placeholder.com/40" alt="Logo">
+                <div>
+                    <h1 id="site-title">加载中...</h1>
+                    <p id="site-desc">加载中...</p>
+                </div>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" placeholder="搜索">
+                <span>Ctrl+K</span>
+            </div>
+            
+            <div id="sidebar-nav">
+                <!-- 导航项由JS动态生成 -->
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-archive"></i> 归档
+            </div>
+            
+            <div style="flex:1"></div>
+            <div style="width:100%;margin-top:auto;">
+                <div class="theme-toggle">
+                    <button id="dark-mode" title="深色模式"><i class="fas fa-moon"></i></button>
+                    <button id="light-mode" class="active" title="浅色模式"><i class="fas fa-sun"></i></button>
+                    <button id="system-mode" title="跟随系统"><i class="fas fa-adjust"></i></button>
+                </div>
+                <div class="bottom-icons" id="bottom-icons" style="background-repeat:no-repeat;background-position:center;">
+                    <!-- 图标链接将由JS动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <h2>精选文章</h2>
+            </div>
+            
+            <div class="featured-articles">
+                <div class="featured-card">
+                    <div>
+                        <h3>Win 终端</h3>
+                        <p>PowerShell 体验优化</p>
+                    </div>
+                </div>
+                <div class="featured-card" style="background-image: url('https://via.placeholder.com/250x120?text=Moonlight');">
+                    <div>
+                        <h3>Moonlight</h3>
+                        <p>游戏串流/远程控制</p>
+                    </div>
+                </div>
+                <div class="featured-card" style="background-image: url('https://via.placeholder.com/250x120?text=ArchInstall');">
+                    <div>
+                        <h3>ArchInstall</h3>
+                        <p>轻松安装 Arch Linux</p>
+                    </div>
+                </div>
+                <div class="featured-card" style="background-image: url('https://via.placeholder.com/250x120?text=More');">
+                    <div>
+                        <h3>更多...</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                <span style="margin-right: 15px;"><i class="fas fa-folder"></i> 全部分类</span>
+                <span><i class="fas fa-calendar-alt"></i> 创建日期</span>
+            </div>
+            
+            <div class="article-list">
+                <!-- 文章1 -->
+                <div class="article-card">
+                    <h3 class="article-title">谈谈不受欢迎的博客技术特征</h3>
+                    <div class="article-excerpt">
+                        从弹窗干扰到服务滥用，文章剖析博客网站「自以为在优化，实则在添堵」的负面技术特征。
+                    </div>
+                    <div class="article-meta">
+                        <span><i class="fas fa-clock"></i> 5 天前</span>
+                        <span><i class="fas fa-tag"></i> 杂谈</span>
+                        <span><i class="fas fa-font"></i> 2253 字</span>
+                    </div>
+                </div>
+                
+                <!-- 文章2 -->
+                <div class="article-card">
+                    <h3 class="article-title">我们的设备被拿来做了什么：软件的背景行为</h3>
+                    <div class="article-excerpt">
+                        软件为了利益添加不合用户预期的「背景行为」，无论早晚都会暴雷。你我都可能是「背景行为」的波及者，你享受了免费，你的设备在为你打工。
+                    </div>
+                    <div class="article-meta">
+                        <span><i class="fas fa-clock"></i> 8月18日</span>
+                        <span><i class="fas fa-tag"></i> 杂谈</span>
+                        <span><i class="fas fa-font"></i> 1557 字</span>
+                    </div>
+                </div>
+                
+                <!-- 文章3 -->
+                <div class="article-card">
+                    <div class="article-with-image">
+                        <div class="article-image">
+                            <img src="https://via.placeholder.com/150x100?text=字体与排版" alt="字体与排版">
+                        </div>
+                        <div class="article-content">
+                            <h3 class="article-title">前端字体二三事</h3>
+                            <div class="article-excerpt">
+                                前端字体排版有许多细节需要注意，文章从我的实际开发经验出发，介绍合成字形、对齐技巧、排版优化，以及自己的一些踩坑心得。
+                            </div>
+                            <div class="article-meta">
+                                <span><i class="fas fa-clock"></i> 4月16日</span>
+                                <span><i class="fas fa-clock"></i> 5 天前</span>
+                                <span><i class="fas fa-tag"></i> 经验分享</span>
+                                <span><i class="fas fa-font"></i> 4048 字</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文章4 -->
+                <div class="article-card">
+                    <div class="article-with-image">
+                        <div class="article-image">
+                            <img src="https://via.placeholder.com/150x100?text=深浅色模式" alt="深浅色模式">
+                        </div>
+                        <div class="article-content">
+                            <h3 class="article-title">深色模式开发的最佳实践</h3>
+                            <div class="article-excerpt">
+                                前端深色模式不止于 prefers-color-scheme，完整解析自动检测、手动切换的实现方案，解决闪屏、样式冲突、变量管理等常见痛点，提供稳健的深色模式最佳实践。
+                            </div>
+                            <div class="article-meta">
+                                <span><i class="fas fa-clock"></i> 4月14日</span>
+                                <span><i class="fas fa-tag"></i> 经验分享</span>
+                                <span><i class="fas fa-font"></i> 1353 字</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 文章5 -->
+                <div class="article-card">
+                    <h3 class="article-title">寻不回手工油糕</h3>
+                    <div class="article-excerpt">
+                        油糕的酥皮，是从什么时候开始不往下掉的？
+                    </div>
+                    <div class="pagination">
+                        <button><i class="fas fa-chevron-left"></i></button>
+                        <button class="active">1</button>
+                        <button>2</button>
+                        <button>3</button>
+                        <button>4</button>
+                        <button>5</button>
+                        <button>6</button>
+                        <button>...</button>
+                        <button>9</button>
+                        <button><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./main.js"></script>
+</body>
+</html>
